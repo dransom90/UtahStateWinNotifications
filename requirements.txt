@@ -1,0 +1,6 @@
+os
+requests
+datetime
+dotenv
+time
+pyyaml

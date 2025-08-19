@@ -1,0 +1,27 @@
+name: Utah State Win Notifier
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # run every 30 minutes
+  workflow_dispatch: # allow manual runs
+
+jobs:
+  check-wins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run notifier
+        env:
+          PUSH_API_KEY: ${{ secrets.PUSH_API_KEY }}
+          PUSH_USER_KEY: ${{ secrets.PUSH_USER_KEY }}
+        run: python utah_state_notifier.py

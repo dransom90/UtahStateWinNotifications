@@ -15,24 +15,6 @@ today = date.today()
 
 BASE_URL = "https://ncaa-api.henrygd.me/scoreboard"
 
-SPORTS = {
-    "football": {"division": "fbs", "conference": "mountain-west"},
-    "soccer-women": {"division": "d1", "conference": "mountain-west"},
-    "basketball-men": {"division": "d1", "conference": "mountain-west"},
-    "basketball-women": {"division": "d1", "conference": "mountain-west"},
-    "volleyball-women": {"division": "d1", "conference": "mountain-west"},
-    "gymnastics-women": {"division": "d1", "conference": "mountain-west"},
-    "softball": {"division": "d1", "conference": "mountain-west"},
-    "tennis-men": {"division": "d1", "conference": "mountain-west"},
-    "tennis-women": {"division": "d1", "conference": "mountain-west"},
-    "golf-men": {"division": "d1", "conference": "mountain-west"},
-    "cross-country-men": {"division": "d1", "conference": "mountain-west"},
-    "cross-country-women": {"division": "d1", "conference": "mountain-west"},
-    "trackfield-outdoor-men": {"division": "d1", "conference": "mountain-west"},
-    "trackfield-outdoor-women": {"division": "d1", "conference": "mountain-west"},
-    
-    # Add more sports as needed
-}
 
 def fetch_games(sport: str, division: str, year: int, month: int, day: int, conference: str, week: int = None):
     if sport == "football":
