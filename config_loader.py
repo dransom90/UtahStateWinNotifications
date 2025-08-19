@@ -7,10 +7,10 @@ def load_config(path="config.yaml"):
         config = yaml.safe_load(f)
 
     # Expand env vars
-    for k, v in config.get("notifications", {}).items():
-        if isinstance(v, str) and v.startswith("${") and v.endswith("}"):
-            env_key = v[2:-1]
-            config["notifications"][k] = os.getenv(env_key, "")
+    # for k, v in config.get("notifications", {}).items():
+    #     if isinstance(v, str) and v.startswith("${") and v.endswith("}"):
+    #         env_key = v[2:-1]
+    #         config["notifications"][k] = os.getenv(env_key, "")
 
     return config
 
