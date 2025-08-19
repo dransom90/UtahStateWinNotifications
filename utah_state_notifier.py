@@ -1,30 +1,59 @@
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, date
 from dotenv import load_dotenv
+import time
+from config_loader import load_config, get_football_week
 
 # Load .env variables
 load_dotenv()
 PUSHOVER_USER_KEY = os.getenv("PUSHOVER_USER_KEY")
 PUSHOVER_API_TOKEN = os.getenv("PUSHOVER_API_TOKEN")
 
+config = load_config()
+today = date.today()
+
 BASE_URL = "https://ncaa-api.henrygd.me/scoreboard"
 
 SPORTS = {
     "football": {"division": "fbs", "conference": "mountain-west"},
     "soccer-women": {"division": "d1", "conference": "mountain-west"},
-    "soccer-men": {"division": "d1", "conference": "mountain-west"},
     "basketball-men": {"division": "d1", "conference": "mountain-west"},
     "basketball-women": {"division": "d1", "conference": "mountain-west"},
+    "volleyball-women": {"division": "d1", "conference": "mountain-west"},
+    "gymnastics-women": {"division": "d1", "conference": "mountain-west"},
+    "softball": {"division": "d1", "conference": "mountain-west"},
+    "tennis-men": {"division": "d1", "conference": "mountain-west"},
+    "tennis-women": {"division": "d1", "conference": "mountain-west"},
+    "golf-men": {"division": "d1", "conference": "mountain-west"},
+    "cross-country-men": {"division": "d1", "conference": "mountain-west"},
+    "cross-country-women": {"division": "d1", "conference": "mountain-west"},
+    "trackfield-outdoor-men": {"division": "d1", "conference": "mountain-west"},
+    "trackfield-outdoor-women": {"division": "d1", "conference": "mountain-west"},
+    
     # Add more sports as needed
 }
 
-def fetch_games(sport, division, year, month, day, conference):
-    url = f"{BASE_URL}/{sport}/{division}/{year}/{month}/{day}/{conference}"
-    print(f"Fetching: {url}")
-    r = requests.get(url, timeout=10)
-    r.raise_for_status()
-    return r.json().get("games", [])
+def fetch_games(sport: str, division: str, year: int, month: int, day: int, conference: str, week: int = None):
+    if sport == "football":
+        if week is None:
+            raise ValueError("Football requires a 'week' number (1–15)")
+        url = f"https://ncaa-api.henrygd.me/scoreboard/{sport}/{division}/{year}/{week}"
+    else:
+        url = f"https://ncaa-api.henrygd.me/scoreboard/{sport}/{division}/{year}/{month}/{day}/{conference}"
+
+    try:
+        print(f"calling url: {url}")
+        resp = requests.get(url, timeout=10)
+        if resp.status_code == 404:
+            print("No games found")
+            return []
+        resp.raise_for_status()
+        data = resp.json()
+        return data.get("games", [])
+    except requests.exceptions.RequestException as e:
+        print(f"⚠️ Error fetching games from {url}: {e}")
+        return []
 
 def is_utah_state_win(game):
     status = game.get("status", {}).get("state")
@@ -67,15 +96,23 @@ def send_push_notification(message):
 
 def check_sports_for_wins():
     today = datetime.now()
+    print(f"Checking for USU wins for {today}")
     year, month, day = today.strftime("%Y %m %d").split()
 
-    for sport, info in SPORTS.items():
-        games = fetch_games(sport, info["division"], year, month, day, info["conference"])
-        for entry in games:
-            game = entry.get("game", {})
-            if is_utah_state_win(game):
-                title = game.get("title", "Utah State Game")
-                send_push_notification(f"🎉 Utah State won! {title}")
+    for sport, info in config["sports"].items():
+        print(f"checking {sport}")
+        if sport == "football":
+            week = get_football_week(info["weeks"], today)
+            games = fetch_games(sport, info["division"], today.year, None, None, config["conference"], week=week)
+        else:
+            games = fetch_games(sport, info["division"], today.year, today.month, today.day, config["conference"])
+            for entry in games:
+                game = entry.get("game", {})
+                if is_utah_state_win(game):
+                    title = game.get("title", "Utah State Game")
+                    send_push_notification(f"🎉 Utah State won! {title}")
+        # Sleep 0.3s between calls → max ~3 calls per second
+        time.sleep(0.3)
 
 if __name__ == "__main__":
     check_sports_for_wins()

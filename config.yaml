@@ -1,0 +1,54 @@
+school: "Utah St."
+conference: "mountain-west"
+
+sports:
+  football:
+    division: "fbs"
+    weeks:
+      1: "2025-08-23"
+      2: "2025-09-05"
+      3: "2025-09-11"
+      4: "2025-09-18"
+      5: "2025-09-25"
+      6: "2025-10-02"
+      7: "2025-10-08"
+      8: "2025-10-14"
+      9: "2025-10-21"
+      10: "2025-10-28"
+      11: "2025-11-04"
+      12: "2025-11-11"
+      13: "2025-11-18"
+      14: "2025-11-24"
+      15: "2025-12-01" # Probably bowl season, may have to revisit this.
+
+  soccer-women:
+    division: "d1"
+  basketball-men:
+    division: "d1"
+  basketball-women:
+    division: "d1"
+  volleyball-women:
+    division: "d1"
+  softball:
+    division: "d1"
+  tennis-men:
+    division: "d1"
+  tennis-women:
+    division: "d1"
+
+  # All sports under this line have different matchup formats and probably don't work.
+  # Will need to revisit these and see if we can figure something out.
+  golf-men:
+    division: "d1"
+  cross-country-men:
+    division: "d1"
+  cross-country-women:
+    division: "d1"
+  trackfield-outdoor-men:
+    division: "d1"
+  trackfield-outdoor-women:
+    division: "d1"
+
+notifications:
+  type: "push" # push | email
+  push_api_key: "${PUSH_API_KEY}"
