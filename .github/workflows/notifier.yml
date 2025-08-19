@@ -22,6 +22,6 @@ jobs:
 
       - name: Run notifier
         env:
-          PUSH_API_KEY: ${{ secrets.PUSH_API_KEY }}
-          PUSH_USER_KEY: ${{ secrets.PUSH_USER_KEY }}
+          PUSHOVER_API_KEY: ${{ secrets.PUSHOVER_API_KEY }}
+          PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
         run: python utah_state_notifier.py
