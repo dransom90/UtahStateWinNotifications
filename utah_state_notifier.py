@@ -79,6 +79,7 @@ def send_push_notification(message):
 def check_sports_for_wins():
     today = datetime.now()
     print(f"Checking for USU wins for {today}")
+    send_push_notification("Starting check for USU wins")
     year, month, day = today.strftime("%Y %m %d").split()
 
     for sport, info in config["sports"].items():
