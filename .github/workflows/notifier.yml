@@ -1,8 +1,8 @@
 name: Utah State Win Notifier
 
 on:
-  schedule:
-    - cron: "*/30 * * * *" # run every 30 minutes
+  #schedule:
+    #- cron: "*/30 * * * *" # run every 30 minutes
   workflow_dispatch: # allow manual runs
 
 jobs:
